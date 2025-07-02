@@ -1,82 +1,167 @@
 // Dua Database
 const duas = {
-    dua1: {
-        arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
-        urdu: "Aye hamare Rab! Humein duniya mein bhalai ata farma aur akhirat mein bhi bhalai ata farma aur humein aag ke azab se bacha."
+    khairiyat: {
+        arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْخَيْرَ كُلَّهُ",
+        urdu: "اے اللہ! میں تجھ سے ہر قسم کی بھلائی مانگتا ہوں",
+        roman: "Allahumma inni as'aluka al-khayra kullahu"
     },
-    dua2: {
-        arabic: "اللَّهُمَّ رَبَّ النَّاسِ، أَذْهِبِ الْبَأْسَ، اشْفِ، أَنْتَ الشَّافِي، لاَ شِفَاءَ إِلاَّ شِفَاؤُكَ، شِفَاءً لاَ يُغَادِرُ سَقَمًا",
-        urdu: "Aye Allah! Logon ke Rab, takleef ko door kar de, shifa de de, tu hi shifa dene wala hai, tere siwa koi shifa dene wala nahi, aisi shifa de ke koi bimari baqi na rahe."
+    sehat: {
+        arabic: "اللَّهُمَّ عَافِنِي فِي بَدَنِي",
+        urdu: "اے اللہ! میرے جسم میں عافیت رکھ",
+        roman: "Allahumma afini fi badani"
     },
-    dua3: {
-        arabic: "اللَّهُمَّ اكْفِنِي بِحَلالِكَ عَنْ حَرَامِكَ، وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاكَ",
-        urdu: "Aye Allah! Mujhe apne halal rizq se haram se bacha le aur apne fazl se dusron se beparwah kar de."
+    maafi: {
+        arabic: "رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ",
+        urdu: "اے میرے رب! مجھے بخش دے اور میری توبہ قبول فرما",
+        roman: "Rabbighfir li wa tub alayya"
     },
-    dua4: {
-        arabic: "رَبِّ هَبْ لِي مِنَ الصَّالِحِينَ",
-        urdu: "Aye mere Rab! Mujhe salih logon mein se nikah ata farma."
+    rizq: {
+        arabic: "اللَّهُمَّ ارْزُقْنِي رِزْقًا حَلَالًا وَاسِعًا",
+        urdu: "اے اللہ! مجھے حلال اور وسیع رزق عطا فرما",
+        roman: "Allahumma arzuqni rizqan halalan wasi'a"
     },
-    dua5: {
-        arabic: "لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ",
-        urdu: "Tere siwa koi mabood nahi, tu paak hai, main sacchi muchchi apni ghalti maanta hoon."
+    hidayat: {
+        arabic: "اللَّهُمَّ اهْدِنِي وَسَدِّدْنِي",
+        urdu: "اے اللہ! مجھے ہدایت عطا فرما اور میری رہنمائی فرما",
+        roman: "Allahumma ahdini wa saddidni"
     }
 };
 
-// Form Submission
-document.getElementById('duaForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    generateLink();
-});
+// DOM Elements
+const userNameInput = document.getElementById('userName');
+const duaTypeSelect = document.getElementById('duaType');
+const duaTextElement = document.getElementById('duaText');
+const languageButtons = document.querySelectorAll('.language-toggle button');
+const whatsappShareBtn = document.getElementById('whatsappShare');
+const copyLinkBtn = document.getElementById('copyLink');
+const bgMusic = document.getElementById('bgMusic');
 
-// Generate Shareable Link
-function generateLink() {
-    const name = document.getElementById('nameInput').value.trim();
-    const duaId = document.getElementById('duaSelect').value;
+// Current State
+let currentLanguage = 'arabic';
+let currentDuaType = '';
+let ameenCount = 0;
+
+// Initialize Stars Animation
+function initStars() {
+    const starsContainer = document.createElement('div');
+    starsContainer.className = 'stars';
+    document.body.appendChild(starsContainer);
+
+    for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        
+        // Random properties
+        const size = Math.random() * 3;
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        const duration = 2 + Math.random() * 3;
+        
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = `${x}%`;
+        star.style.top = `${y}%`;
+        star.style.setProperty('--duration', `${duration}s`);
+        
+        starsContainer.appendChild(star);
+    }
+}
+
+// Update Dua Display
+function updateDuaDisplay() {
+    const name = userNameInput.value.trim() || 'Aap';
+    const duaType = duaTypeSelect.value;
     
-    if(!name) {
-        alert("Kripya apna naam likhein");
+    if (!duaType) {
+        duaTextElement.textContent = 'براہ کرم ایک دعا منتخب کریں';
         return;
     }
     
-    // Show animation
-    const animation = document.getElementById('duaAnimation');
-    animation.classList.remove('hidden');
-    animation.querySelector('.arabic').textContent = duas[duaId].arabic;
-    animation.querySelector('.urdu').textContent = duas[duaId].urdu;
+    currentDuaType = duaType;
+    const dua = duas[duaType][currentLanguage];
     
-    // Generate link (fake URL for demo)
-    const link = `https://muhram-dua-share.vercel.app/dua.html?name=${encodeURIComponent(name)}&dua=${duaId}`;
+    // Format the dua with the user's name
+    let formattedDua = dua;
+    if (currentLanguage === 'urdu' || currentLanguage === 'roman') {
+        formattedDua = `${name} کے لیے: ${dua}`;
+    } else {
+        formattedDua = `للـ${name}: ${dua}`;
+    }
     
-    // Show link section
-    const linkSection = document.getElementById('linkSection');
-    linkSection.classList.remove('hidden');
-    document.getElementById('generatedLink').value = link;
+    duaTextElement.textContent = formattedDua;
+}
+
+// Generate Shareable Link
+function generateShareLink() {
+    const name = encodeURIComponent(userNameInput.value.trim());
+    const duaType = duaTypeSelect.value;
     
-    // Scroll to result
-    linkSection.scrollIntoView({ behavior: 'smooth' });
+    if (!name || !duaType) return window.location.href;
+    
+    return `${window.location.origin}${window.location.pathname}?name=${name}&dua=${duaType}`;
 }
 
-// Copy Link to Clipboard
-function copyLink() {
-    const linkInput = document.getElementById('generatedLink');
-    linkInput.select();
-    document.execCommand('copy');
-    alert("Link copy ho gaya! Ab aap paste kar sakte hain.");
+// Initialize Event Listeners
+function initEventListeners() {
+    // Language toggle
+    languageButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            languageButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            currentLanguage = button.dataset.lang;
+            updateDuaDisplay();
+        });
+    });
+    
+    // Input changes
+    userNameInput.addEventListener('input', updateDuaDisplay);
+    duaTypeSelect.addEventListener('change', updateDuaDisplay);
+    
+    // Share buttons
+    whatsappShareBtn.addEventListener('click', () => {
+        const link = generateShareLink();
+        const message = `🤲 یہ دعا آپ کے لیے ہے:\n\n${duaTextElement.textContent}\n\n${link}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+    });
+    
+    copyLinkBtn.addEventListener('click', () => {
+        const link = generateShareLink();
+        navigator.clipboard.writeText(link).then(() => {
+            alert('Ameen kehna na bhoolna 💖\n\nLink copied to clipboard!');
+            ameenCount++;
+        });
+    });
+    
+    // Background music toggle
+    document.addEventListener('click', () => {
+        // First interaction will unmute the audio
+        if (bgMusic.muted) {
+            bgMusic.muted = false;
+            bgMusic.play().catch(e => console.log('Audio play failed:', e));
+        }
+    });
 }
 
-// Share Functions
-function shareOnWhatsApp() {
-    const link = document.getElementById('generatedLink').value;
-    window.open(`https://wa.me/?text=${encodeURIComponent("Meri dua aapke liye: " + link)}`, '_blank');
+// Initialize the app
+function init() {
+    initStars();
+    initEventListeners();
+    
+    // Check URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const nameParam = urlParams.get('name');
+    const duaParam = urlParams.get('dua');
+    
+    if (nameParam) userNameInput.value = decodeURIComponent(nameParam);
+    if (duaParam && duas[duaParam]) {
+        duaTypeSelect.value = duaParam;
+        updateDuaDisplay();
+    }
+    
+    // Start muted background music
+    bgMusic.muted = true;
+    bgMusic.play().catch(e => console.log('Autoplay prevented:', e));
 }
 
-function shareOnFacebook() {
-    const link = document.getElementById('generatedLink').value;
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, '_blank');
-}
-
-// Donation Function
-function donate() {
-    alert("Shukriya! Aapka donation hamare madrassa ke gareeb bachon ki taleem mein madad karega.");
-    // Yahan aap donation gateway ka link add kar sakte hain
-}
+// Start the application
+document.addEventListener('DOMContentLoaded', init);
