@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muhram Dua Share</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>Muhram Dua Share</h1>
+        <p>Apne dosto aur rishtedar ke sath dua share karein</p>
+    </header>
+    
+    <main>
+        <div class="container">
+            <h2>Apni Dua Chunein</h2>
+            <form id="duaForm">
+                <select id="duaSelect" class="form-input">
+                    <option value="dua1">Dua 1 - Har Mushkil Ka Hal</option>
+                    <option value="dua2">Dua 2 - Bimari Se Shifa</option>
+                    <option value="dua3">Dua 3 - Rizq Mein Barkat</option>
+                    <option value="dua4">Dua 4 - Nikah Ke Liye</option>
+                    <option value="dua5">Dua 5 - Hajat Puri Hone Ki</option>
+                </select>
+                
+                <input type="text" id="nameInput" class="form-input" placeholder="Apna naam likhein" required>
+                
+                <button type="submit" class="btn">Dua Link Banayein</button>
+            </form>
+            
+            <div id="linkSection" class="result-box hidden">
+                <h3>Aapki Dua Link:</h3>
+                <div class="link-container">
+                    <input type="text" id="generatedLink" readonly class="link-input">
+                    <button onclick="copyLink()" class="copy-btn"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <div class="share-buttons">
+                    <button class="share-btn whatsapp" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                    <button class="share-btn facebook" onclick="shareOnFacebook()"><i class="fab fa-facebook"></i> Facebook</button>
+                </div>
+            </div>
+            
+            <div class="dua-animation hidden" id="duaAnimation">
+                <div class="arabic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+                <div class="urdu">شروع اللہ کے نام سے جو بڑا مہربان نہایت رحم والا ہے</div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="donation-section">
+            <h3>Gareeb Bachon Ki Taleem Mein Madad Karein</h3>
+            <button class="btn donate-btn" onclick="donate()">Donate Karein</button>
+        </div>
+        <p>&copy; 2023 Muhram Dua Share. Sab rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
